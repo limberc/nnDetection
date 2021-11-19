@@ -7,11 +7,10 @@ from multiprocessing import Pool, Value
 from pathlib import Path
 
 from loguru import logger
-from nndet.io.load import save_json
-
-from nndet.io.prepare import maybe_split_4d_nifti, create_test_split
 
 from nndet.io import get_case_ids_from_dir, load_json, save_yaml
+from nndet.io.load import save_json
+from nndet.io.prepare import create_test_split, maybe_split_4d_nifti
 from nndet.utils.check import env_guard
 from nndet.utils.info import maybe_verbose_iterable
 
@@ -32,7 +31,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('tasks', type=str, nargs='+',
                         help="One or multiple of: Task003_Liver, Task007_Pancreas, "
-                        "Task008_HepaticVessel, Task010_Colon",
+                             "Task008_HepaticVessel, Task010_Colon",
                         )
     args = parser.parse_args()
     tasks = args.tasks
@@ -100,7 +99,7 @@ def main():
         dataset_info = {
             "task": task,
             "name": original_meta["name"],
-            
+
             "target_class": None,
             "test_labels": True,
 
@@ -115,7 +114,7 @@ def main():
         save_json(dataset_info, task_data_dir / "dataset.json")
 
         # prepare data and labels
-        case_ids = get_case_ids_from_dir(source_data_dir, remove_modality=True)
+        case_ids = get_case_ids_from_dir(source_data_dir, remove_modality=False)
         case_ids = sorted([c for c in case_ids if c])
         logger.info(f"Found {len(case_ids)} for preparation.")
 
